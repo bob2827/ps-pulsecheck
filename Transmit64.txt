@@ -1,0 +1,33 @@
+
+Write three programs.
+
+First program:
+Open a socket and transmit 64 bit binary integers on it.
+
+Second program:
+Open two sockets, one from the first program, one to the third program.
+Receive 64 bit integers from first program. Filter for top N largest values (N initially 20).
+Any time a new top N value is received, transmit to third program.
+If third program transmits an 8 bit unsigned value to second program on socket, use that value as new N.
+
+Third program:
+Receives stream of 64 bit integers from second program and prints them out.
+About once a minute, transmit a new 8-bit N to second program.
+
+All programs should be written to be platform independent.
+You should assume that programs might run on different kinds of processors.
+You can assume long long availability.
+
+You can assume that only a single instance of each program runs at a time (no spawning necessary).
+
+You may choose how the sockets are to be created, but listeners on ports would be best.
+
+You may write the programs either C or C++.
+
+First and third programs should be considered test programs.
+Second program should be considered production code.
+
+What environment did you compile/run this in?
+
+Could you include and Makefile or VC solution files…
+
