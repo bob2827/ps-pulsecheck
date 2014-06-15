@@ -15,7 +15,7 @@ void intHandle(int sig);
 int sfd = -1;
 
 int main(){
-    char data[1024] = "hello data\n";
+    //char data[1024] = "hello data\n";
     int conStat = -1;
     struct addrinfo hints, *res;
     memset(&hints, 0, sizeof(hints));
@@ -42,8 +42,10 @@ int main(){
         int64_t a = rand();
         int64_t b = rand();
         int64_t n = (a << 32) | b;
-        snprintf(data, 1024, "%"PRId64"\n", n);
-        conStat = send(sfd, data, strlen(data), 0);
+        printf("%"PRId64"\n", n);
+        //It's 2014 and there's no standard hton64? Am I missing something?
+        int64_t data = htobe64(n);
+        conStat = send(sfd, (void*)&data, sizeof(int64_t), 0);
         printf("Stat: %d\n", conStat);
         if(conStat <= 0){
             fprintf(stderr, "Error sending data (%d): %s\n", errno, strerror(errno));
