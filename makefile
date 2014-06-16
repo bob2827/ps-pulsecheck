@@ -1,14 +1,13 @@
-CC=gcc
 CFLAGS=--std=c99  -D_POSIX_SOURCE -D_BSD_SOURCE
 all: p1 p2 p3
 
-p1: pulsecheck.c p1.c 
+p1: pulsecheck.c p1.c
 	$(CC) $(CFLAGS) $^ -g -o p1
 
-p2: pulsecheck.c p2.c 
+p2: pulsecheck.c p2.c
 	$(CC) $(CFLAGS) $^ -g -o p2
 
-p3: pulsecheck.c p3.c 
+p3: pulsecheck.c p3.c
 	$(CC) $(CFLAGS) $^ -g -o p3
 
 clean:

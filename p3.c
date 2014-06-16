@@ -26,7 +26,7 @@ int main(){
     
     signal(SIGINT, intHandle);
 
-    initClientSocket(&hints, &res, "localhost", P3port, &sfd);
+    initClientSocket(&hints, &res, P2host, P32port, &sfd);
     connectClientSocket(res, &sfd, 5); 
 
     time_t lastReset = time(0);

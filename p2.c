@@ -93,7 +93,7 @@ void showStorage(){
 
 int main(){
     //Initialize the storage array
-    int64_t unfilled = MIN64; 
+    int64_t unfilled = MIN64;
     for(int i = 0; i < STORESIZE; i++){
         storage[i] = unfilled;
     }
@@ -101,8 +101,8 @@ int main(){
     //Initialize network data structures
     struct addrinfo P1hints, P3hints, *P1res, *P3res;
 
-    initSrvSocket(&P1hints, &P1res, P1port, &sfd1, BACKLOG_DEPTH);
-    initSrvSocket(&P3hints, &P3res, P3port, &sfd3, BACKLOG_DEPTH);
+    initSrvSocket(&P1hints, &P1res, P12port, &sfd1, BACKLOG_DEPTH);
+    initSrvSocket(&P3hints, &P3res, P32port, &sfd3, BACKLOG_DEPTH);
     FD_ZERO(&socks);
 
     while(1){
@@ -123,7 +123,7 @@ int main(){
             int r = select(highestfd+1, &socks, NULL, NULL, NULL);
             if(r == -1){
                 //error
-                fprintf(stderr, "PANIC!\n");
+                fprintf(stderr, "Unhandled RX error on one of the sockets, exiting.\n");
                 exit(EXIT_FAILURE);
             }else if(r){
                 //data available

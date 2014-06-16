@@ -11,8 +11,9 @@
 //'ll' modifier might be gcc specific
 #define MIN64 ( 1ll << 63 )
 
-#define P1port "10000"
-#define P3port "10002"
+#define P2host "localhost"
+#define P12port "10000"
+#define P32port "10002"
 
 int initSrvSocket(struct addrinfo *hints, struct addrinfo **res, char* port,
                   int* sfd, int backlog);

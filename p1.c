@@ -21,7 +21,7 @@ int main(){
 
     signal(SIGINT, intHandle);
 
-    initClientSocket(&hints, &res, "localhost", P1port, &sfd);
+    initClientSocket(&hints, &res, P2host, P12port, &sfd);
     connectClientSocket(res, &sfd, 5);
 
     while(1){
@@ -47,4 +47,3 @@ void intHandle(int sig){
     }
     exit(0);
 }
-
