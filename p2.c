@@ -115,18 +115,28 @@ int main(){
             }
             usleep(500000);
         }
-        FD_SET(sfd1Live, &socks);
         FD_SET(sfd3Live, &socks);
+        FD_SET(sfd1Live, &socks);
         int highestfd = sfd1Live > sfd3Live ? sfd1Live : sfd3Live;
 
         while(1){
             int r = select(highestfd+1, &socks, NULL, NULL, NULL);
-            if(r == -1){
+            if(r < 0){
                 //error
                 fprintf(stderr, "Unhandled RX error on one of the sockets, exiting.\n");
                 exit(EXIT_FAILURE);
-            }else if(r){
+            }
+            if(r){
                 //data available
+                if(FD_ISSET(sfd3Live, &socks)){
+                    int r = recv(sfd3Live, p3RxBuf, sizeof(uint8_t)*P3BUFSIZE, 0);
+                    fprintf(stderr, "got new buffer size assignment\n");
+                    for(int i = 0; i < r/sizeof(uint8_t); i++){
+                        int8_t n = *(int8_t*)(p3RxBuf+i);
+                        fprintf(stdout, "Got %d from Prog 3, resetting storage", n);
+                        resizeStorage(n);
+                    }
+                }
                 if(FD_ISSET(sfd1Live, &socks)){
                     int r = recv(sfd1Live, p1RxBuf, sizeof(int64_t)*P1BUFSIZE, 0);
                     for(int i = 0; i < r/sizeof(int64_t); i++){
@@ -143,21 +153,15 @@ int main(){
                                     "Error sending data (%d): %s\n", errno,
                                     strerror(errno));
                             }
-                        }
-                        else{
+                        }else{
                             fprintf(stderr, "dropped %"PRId64"\n" , data);
                         }
                     }
                 }
-                if(FD_ISSET(sfd3Live, &socks)){
-                    int r = recv(sfd3Live, p3RxBuf, sizeof(uint8_t)*P3BUFSIZE, 0);
-                    for(int i = 0; i < r/sizeof(uint8_t); i++){
-                        int8_t n = *(int8_t*)(p3RxBuf+i);
-                        fprintf(stdout, "Got %d from Prog 3, resetting storage", n);
-                        resizeStorage(n);
-                    }
-                }
-            }else{
+            }
+            if(!r){
+                printf("select() without timeot returned 0, something is wrong\n");
+                exit(EXIT_FAILURE);
             }
         }
     }

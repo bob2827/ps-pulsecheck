@@ -1,5 +1,6 @@
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <netinet/tcp.h>
 #include <netdb.h>
 #include <string.h>
 #include <stdlib.h>
@@ -23,11 +24,15 @@ int64_t p2RxBuf[P2BUFSIZE];
 int main(){
     int conStat = -1, sfd = -1;
     struct addrinfo hints, *res;
-    
+
     signal(SIGINT, intHandle);
 
     initClientSocket(&hints, &res, P2host, P32port, &sfd);
-    connectClientSocket(res, &sfd, 5); 
+    connectClientSocket(res, &sfd, 5);
+
+    //int flag = 1;
+    //int result = setsockopt(sfd, IPPROTO_TCP, TCP_NODELAY, (char *) &flag,
+    //                        sizeof(int));
 
     time_t lastReset = time(0);
     while(1){
@@ -41,7 +46,7 @@ int main(){
             uint8_t c = rand() % 255;
             conStat = send(sfd, (void*)&c, sizeof(uint8_t), 0);
             lastReset = time(0);
-            printf("Sent new size of %d\n", c);
+            printf("Sent new size of %d (%d)\n", c, conStat);
         }
         usleep(250000);
     }
