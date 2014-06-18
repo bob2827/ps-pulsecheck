@@ -6,7 +6,7 @@
   to run on windows platforms. You might need minor syscall tweaks if moving to
   BSD or other unicies.
 * There's some extra operational/debugging messaging that can be disabled by
-  unsetting 'DBGINO' in the makefile.
+  unsetting 'DBGINFO' in the makefile.
 * The programs are fairly agnostic as to which order they're started in.
 * Port and host location assumptions are concentrated in pulsecheck.h, if you
   need to change any of them to suit your platform you can do so here
