@@ -13,12 +13,12 @@
 
 #define P2host "localhost"
 #define P12port "10000"
-#define P32port "10002"
+#define P32port "10004"
 
 int initSrvSocket(struct addrinfo *hints, struct addrinfo **res, char* port,
                   int* sfd, int backlog);
 int initClientSocket(struct addrinfo *hints, struct addrinfo **res, char* host,
                      char* port, int* sfd);
 int connectClientSocket(struct addrinfo *target, int* sfd, int retryDelay);
-int connectSrvSocket(int listnerFD, int *acceptedFD);
+int connectSrvSocket(int listnerFD, int *acceptedFD, char *progname);
 #endif

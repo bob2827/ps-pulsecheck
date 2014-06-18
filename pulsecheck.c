@@ -1,9 +1,12 @@
 #include "pulsecheck.h"
 #include <string.h>
 #include <sys/fcntl.h>
+#include <sys/types.h>
+#include <sys/socket.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <errno.h>
+#include <stdlib.h>
 
 int initSrvSocket(struct addrinfo *hints, struct addrinfo **res, char* port,
                   int* sfd, int backlog)
@@ -18,11 +21,19 @@ int initSrvSocket(struct addrinfo *hints, struct addrinfo **res, char* port,
 
     *sfd = socket((*res)->ai_family, (*res)->ai_socktype, (*res)->ai_protocol);
     fcntl(*sfd, F_SETFL, O_NONBLOCK);
-    bind(*sfd, (*res)->ai_addr, (*res)->ai_addrlen);
-    listen(*sfd, BACKLOG_DEPTH);
+    int optval = 1;
+    setsockopt(*sfd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof optval);
+    if(bind(*sfd, (*res)->ai_addr, (*res)->ai_addrlen) < 0){
+        fprintf(stderr, "Unable to bind to port %s (%s)\n", port, strerror(errno));
+        exit(EXIT_FAILURE);
+    }
+    if(listen(*sfd, BACKLOG_DEPTH) < 0){
+        fprintf(stderr, "Unable to listen to port %s (%s)\n", port, strerror(errno));
+        exit(EXIT_FAILURE);
+    };
 }
 
-int connectSrvSocket(int listnerFD, int *acceptedFD)
+int connectSrvSocket(int listnerFD, int *acceptedFD, char *progname)
                      //struct sockaddr_storage acceptedAddr, socklen_t size)
 {
     struct sockaddr_storage address;
@@ -32,7 +43,7 @@ int connectSrvSocket(int listnerFD, int *acceptedFD)
     *acceptedFD = accept(listnerFD, (struct sockaddr *)&address, &addrSize);
     if(*acceptedFD < 0){
         if((errno == EAGAIN) || (errno == EWOULDBLOCK)){
-            printf("Waiting for connect...\n");
+            printf("Waiting for connect (%s)...\n", progname);
         }else{
             printf("Error on P1 socket: %s\n", strerror(errno));
             return -1;

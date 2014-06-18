@@ -1,4 +1,8 @@
 CFLAGS=--std=c99  -D_POSIX_SOURCE -D_BSD_SOURCE
+
+#Comment out to remove extra logging vomit
+CFLAGS+=-DDBGINFO
+
 all: p1 p2 p3
 
 p1: pulsecheck.c p1.c

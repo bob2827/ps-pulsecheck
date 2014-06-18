@@ -1,20 +1,17 @@
 ## NOTES
 
 * Compiled/Tested on Ubuntu 13.10 (64bit)
-* Needs a review of cross-platform compatibility
-* The programs are fairly agnostic as to which order they're started in, but
-  Prog 2 does not yet survive well against unexpected disconnects of the other two.
+* I'm not entirely sure how cross compatible this is as I have limited ability
+  to test it on non-linux platforms. Should compile under cygwin if you need it
+  to run on windows platforms. You might need minor syscall tweaks if moving to
+  BSD or other unicies.
+* There's some extra operational/debugging messaging that can be disabled by
+  unsetting 'DBGINO' in the makefile.
+* The programs are fairly agnostic as to which order they're started in.
 * Port and host location assumptions are concentrated in pulsecheck.h, if you
-  need to change any of them to suit your platform
+  need to change any of them to suit your platform you can do so here
 
 ## TODO
 
-* Prog 2 not properly receiving change requests to "top N" size from Prog 3
 * Flush input sent to Prog 2 during the time between connections from Prog 3 and Prog 1
-* Prog 2's main() needs to be refactored into 2-3 functions to increase readability
-  and organization
-* Make Prog 2 more resilient against runtime dis/re-connects from Prog 1&3
-* Cleaner shutdown of Prog 2
-* Cleanup of logging messages and compile-time debug flag for switch in/out of
-   messages
 * makefile doesn't properly detect changes to pulsecheck.h
